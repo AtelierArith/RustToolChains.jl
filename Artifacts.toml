@@ -1,0 +1,38 @@
+[[RustToolChain]]
+arch = "aarch64"
+git-tree-sha1 = "e213d77b6221a97997996f6edb8a80e1c0804267"
+lazy = true
+os = "macos"
+
+    [[RustToolChain.download]]
+    sha256 = "ec42d93940933340ee55e67003699ebe264aa82d7cf0d5ae08100c06b1bfacfa"
+    url = "https://static.rust-lang.org/dist/rust-1.91.0-aarch64-apple-darwin.tar.gz"
+[[RustToolChain]]
+arch = "x86_64"
+git-tree-sha1 = "d5fb398dc10456cd158addb0e179b370fd336112"
+lazy = true
+os = "macos"
+
+    [[RustToolChain.download]]
+    sha256 = "b329b458c8074023e5f6934bcd6c0bbef5075ac0090548c3d45a7de82e0c5b0c"
+    url = "https://static.rust-lang.org/dist/rust-1.91.0-x86_64-apple-darwin.tar.gz"
+[[RustToolChain]]
+arch = "aarch64"
+git-tree-sha1 = "ed0fa87385f36e9eeef69d0acb70bd5cf88cee67"
+lazy = true
+libc = "gnu"
+os = "linux"
+
+    [[RustToolChain.download]]
+    sha256 = "29c5a608861cc9c06d3f86852a7d7b1a868de2d7ab90d4ff625aeebfb9383390"
+    url = "https://static.rust-lang.org/dist/rust-1.91.0-aarch64-unknown-linux-gnu.tar.gz"
+[[RustToolChain]]
+arch = "x86_64"
+git-tree-sha1 = "c3865d8b1827775f9569e7bc11f49f7d6989ec48"
+lazy = true
+libc = "gnu"
+os = "linux"
+
+    [[RustToolChain.download]]
+    sha256 = "bad9a353330d9f409fe9db790da5701074112f804073506bb2808dd97b940b3c"
+    url = "https://static.rust-lang.org/dist/rust-1.91.0-x86_64-unknown-linux-gnu.tar.gz"

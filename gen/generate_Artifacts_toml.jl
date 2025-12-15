@@ -2,62 +2,45 @@ using Base.BinaryPlatforms: Platform
 using ArtifactUtils
 using Pkg.Artifacts
 
-const RUST_VERSION = "1.91.0"
+const RUST_VERSION = "1.92.0"
 const ARTIFACTS_TOML = joinpath(dirname(@__DIR__), "Artifacts.toml")
 const ARTIFACT_NAME = "RustToolChain"
 
 # Rust triplet から Julia Platform へのマッピング
-# (triplet, (arch, os, libc?))
-# Rust 1.91.0 で利用可能なすべてのプラットフォーム
 const PLATFORM_MAPPINGS = [
     # Apple platforms
-    ("aarch64-apple-darwin", ("aarch64", "macos", nothing)),
-    ("x86_64-apple-darwin", ("x86_64", "macos", nothing)),
+    ("aarch64-apple-darwin", Platform("aarch64", "macos")),
+    ("x86_64-apple-darwin", Platform("x86_64", "macos")),
 
     # Linux - GNU libc
-    ("aarch64-unknown-linux-gnu", ("aarch64", "linux", "glibc")),
-    ("x86_64-unknown-linux-gnu", ("x86_64", "linux", "glibc")),
-    ("i686-unknown-linux-gnu", ("i686", "linux", "glibc")),
-    ("arm-unknown-linux-gnueabi", ("armv6l", "linux", "glibc")),
-    ("arm-unknown-linux-gnueabihf", ("armv6l", "linux", "glibc")),
-    ("armv7-unknown-linux-gnueabihf", ("armv7l", "linux", "glibc")),
-    ("powerpc-unknown-linux-gnu", ("powerpc64le", "linux", "glibc")),
-    ("powerpc64-unknown-linux-gnu", ("powerpc64le", "linux", "glibc")),
-    ("powerpc64le-unknown-linux-gnu", ("powerpc64le", "linux", "glibc")),
-    ("riscv64gc-unknown-linux-gnu", ("riscv64", "linux", "glibc")),
-    ("s390x-unknown-linux-gnu", ("s390x", "linux", "glibc")),
-    ("loongarch64-unknown-linux-gnu", ("loongarch64", "linux", "glibc")),
-    #=
+    ("i686-unknown-linux-gnu", Platform("i686", "linux")),
+    ("x86_64-unknown-linux-gnu", Platform("x86_64", "linux")),
+    ("aarch64-unknown-linux-gnu", Platform("aarch64", "linux")),
+    ("arm-unknown-linux-gnueabihf", Platform("armv6l", "linux")),
+    ("armv7-unknown-linux-gnueabihf", Platform("armv7l", "linux")),
+    ("powerpc64le-unknown-linux-gnu", Platform("powerpc64le", "linux")),
+    ("riscv64gc-unknown-linux-gnu", Platform("riscv64", "linux")),
+
     # Linux - musl libc
-    ("aarch64-unknown-linux-musl", ("aarch64", "linux", "musl")),
-    ("x86_64-unknown-linux-musl", ("x86_64", "linux", "musl")),
-    ("loongarch64-unknown-linux-musl", ("loongarch64", "linux", "musl")),
-
-    # Windows - MSVC
-    ("x86_64-pc-windows-msvc", ("x86_64", "windows", nothing)),
-    ("aarch64-pc-windows-msvc", ("aarch64", "windows", nothing)),
-    ("i686-pc-windows-msvc", ("i686", "windows", nothing)),
-
-    # Windows - GNU
-    ("x86_64-pc-windows-gnu", ("x86_64", "windows", nothing)),
-    ("i686-pc-windows-gnu", ("i686", "windows", nothing)),
-
-    # Windows - GNU LLVM
-    ("aarch64-pc-windows-gnullvm", ("aarch64", "windows", nothing)),
+    ("i686-unknown-linux-musl", Platform("i686", "linux"; libc="musl")),
+    ("x86_64-unknown-linux-musl", Platform("x86_64", "linux"; libc="musl")),
+    ("aarch64-unknown-linux-musl", Platform("aarch64", "linux"; libc="musl")),
+    ("arm-unknown-linux-musleabihf", Platform("armv6l", "linux"; libc="musl")),
+    ("armv7-unknown-linux-musleabihf", Platform("armv7l", "linux"; libc="musl")),
 
     # FreeBSD
-    ("x86_64-unknown-freebsd", ("x86_64", "freebsd", nothing)),
-    =#
+    ("x86_64-unknown-freebsd", Platform("x86_64", "freebsd")),
+    ("aarch64-unknown-freebsd", Platform("aarch64", "freebsd")),
+
+    # Windows
+    ("i686-pc-windows-msvc", Platform("i686", "windows")),
+    ("x86_64-pc-windows-msvc", Platform("x86_64", "windows")),
 ]
 
 function rust_triplet_to_platform(triplet::String)
-    for (rust_triplet, (arch, os, libc)) in PLATFORM_MAPPINGS
+    for (rust_triplet, platform) in PLATFORM_MAPPINGS
         if rust_triplet == triplet
-            if libc === nothing
-                return Platform(arch, os)
-            else
-                return Platform(arch, os; libc=libc)
-            end
+            return platform
         end
     end
     error("Unknown platform triplet: $triplet")

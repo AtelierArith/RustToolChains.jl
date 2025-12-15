@@ -6,7 +6,7 @@ RustToolChains.jl is a Julia package that provides Rust toolchains (especially `
 
 ## Features
 
-- 🦀 Provides Rust 1.91.0 toolchain
+- 🦀 Provides Rust 1.92.0 toolchain
 - 📦 Automatic download and management via Julia's Artifacts system
 - 🖥️ Supports multiple platforms and architectures
 - 🚀 Simple API to execute `cargo` commands

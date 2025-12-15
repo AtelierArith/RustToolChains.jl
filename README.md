@@ -118,10 +118,6 @@ RustToolChains.jl/
 
 Please refer to the LICENSE file in the repository for license information.
 
-## Contributing
-
-Pull requests and issue reports are welcome. Please refer to CONTRIBUTING.md in the repository for contribution guidelines.
-
 ## Author
 
 - Satoshi Terasaki <terasakisatoshi.math@gmail.com>

@@ -2,9 +2,18 @@ using Base.BinaryPlatforms: Platform
 using ArtifactUtils
 using Pkg.Artifacts
 
-const RUST_VERSION = "1.92.0"
+const RUST_VERSION = if length(ARGS) > 0
+    strip(ARGS[1])
+else
+    error("Usage: julia generate_Artifacts_toml.jl <RUST_VERSION>\nExample: julia generate_Artifacts_toml.jl 1.92.0")
+end
 const ARTIFACTS_TOML = joinpath(dirname(@__DIR__), "Artifacts.toml")
 const ARTIFACT_NAME = "RustToolChain"
+
+# バージョン形式の検証（X.Y.Z 形式のみ）
+function validate_version(version::AbstractString)::Bool
+    return match(r"^\d+\.\d+\.\d+$", version) !== nothing
+end
 
 # Rust triplet から Julia Platform へのマッピング
 const PLATFORM_MAPPINGS = [
@@ -45,6 +54,13 @@ function rust_triplet_to_platform(triplet::String)
     end
     error("Unknown platform triplet: $triplet")
 end
+
+# バージョン形式の検証
+if !validate_version(RUST_VERSION)
+    error("Invalid Rust version format: '$RUST_VERSION'. Expected format: X.Y.Z (e.g., 1.92.0)")
+end
+
+@info "Generating Artifacts.toml for Rust $RUST_VERSION"
 
 function add_rust_toolchain_for_platform(triplet::String)
     url = "https://static.rust-lang.org/dist/rust-$(RUST_VERSION)-$(triplet).tar.gz"

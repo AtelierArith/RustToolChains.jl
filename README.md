@@ -103,9 +103,36 @@ RustToolChains.jl/
 │   └── generate_Artifacts_toml.jl  # Script to generate Artifacts.toml
 ├── test/
 │   └── runtests.jl                 # Julia test script
+├── .github/workflows/
+│   ├── CI.yml                      # Continuous integration tests
+│   └── bump-rust-stable.yml        # Auto-update Rust toolchain
 ├── Artifacts.toml                  # List of artifact dependencies
 └── Project.toml                    # Julia package manifest
 ```
+
+### Automatic Rust Toolchain Updates
+
+This package automatically checks for new Rust stable releases and creates pull requests to update the toolchain.
+
+**Automated Workflow:**
+- Runs weekly (every Monday at 00:00 UTC)
+- Fetches the latest Rust stable version from `https://static.rust-lang.org/dist/channel-rust-stable.toml`
+- Regenerates `Artifacts.toml` with the new version
+- Updates the version in `README.md`
+- Creates a pull request if changes are detected
+
+**Manual Update:**
+
+You can manually regenerate `Artifacts.toml` for a specific Rust version:
+
+```bash
+julia --project=gen gen/generate_Artifacts_toml.jl <RUST_VERSION>
+
+# Example:
+julia --project=gen gen/generate_Artifacts_toml.jl 1.93.0
+```
+
+The script validates the version format (X.Y.Z) and provides clear error messages for invalid input.
 
 ## License
 

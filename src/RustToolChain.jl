@@ -1,4 +1,4 @@
-module RustToolChains
+module RustToolChain
 
 const ARTIFACTS_TOML = joinpath(pkgdir(@__MODULE__), "Artifacts.toml")
 const EXE_EXT = Sys.iswindows() ? ".exe" : ""
@@ -51,7 +51,7 @@ If not found, uses the cargo from Julia's Artifacts system.
 
 # Examples
 ```julia
-using RustToolChains: cargo
+using RustToolChain: cargo
 
 # Check cargo version
 run(`\$(cargo()) --version`)
@@ -84,7 +84,7 @@ If not found, uses the rustc from Julia's Artifacts system.
 
 # Examples
 ```julia
-using RustToolChains: rustc
+using RustToolChain: rustc
 
 # Check rustc version
 run(`\$(rustc()) --version`)
@@ -105,4 +105,4 @@ function rustc()
     return `$rustc_exe`
 end
 
-end # module RustToolChains
+end # module RustToolChain

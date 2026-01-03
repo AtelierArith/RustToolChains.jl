@@ -1,8 +1,8 @@
 
 using Test
-using RustToolChains: RustToolChains, cargo, rustc
+using RustToolChain: RustToolChain, cargo, rustc
 
-@testset "RustToolChains" begin
+@testset "RustToolChain" begin
     @test cargo() isa Cmd
     @test rustc() isa Cmd
 end
@@ -16,7 +16,7 @@ end
 end
 
 @testset "cargo run with examples/hello" begin
-    cd(joinpath(pkgdir(RustToolChains), "examples", "hello")) do
+    cd(joinpath(pkgdir(RustToolChain), "examples", "hello")) do
         @test success(`$(cargo()) run`)
     end
 end

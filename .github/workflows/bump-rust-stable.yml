@@ -96,7 +96,7 @@ jobs:
           branch: bump-rust-stable-${{ steps.rust.outputs.version }}
           title: "Bump Rust stable toolchain to ${{ steps.rust.outputs.version }}"
           body: |
-            This PR updates RustToolChains.jl to the latest Rust stable toolchain (${{
+            This PR updates RustToolChain.jl to the latest Rust stable toolchain (${{
               steps.rust.outputs.version
             }}), regenerating Artifacts.toml via gen/generate_Artifacts_toml.jl.
           commit-message: "Bump Rust stable toolchain to ${{ steps.rust.outputs.version }}"

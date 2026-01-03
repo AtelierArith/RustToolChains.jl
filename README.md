@@ -1,8 +1,8 @@
-# RustToolChains.jl
+# RustToolChain.jl
 
-[![CI](https://github.com/AtelierArith/RustToolChains.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/AtelierArith/RustToolChains.jl/actions/workflows/CI.yml)
+[![CI](https://github.com/AtelierArith/RustToolChain.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/AtelierArith/RustToolChain.jl/actions/workflows/CI.yml)
 
-RustToolChains.jl is a Julia package that provides Rust toolchains (especially `cargo`) using Julia's Artifacts system. You can build and run Rust projects directly from Julia without installing Rust on your system.
+RustToolChain.jl is a Julia package that provides Rust toolchains (especially `cargo`) using Julia's Artifacts system. You can build and run Rust projects directly from Julia without installing Rust on your system.
 
 ## Features
 
@@ -21,7 +21,7 @@ RustToolChains.jl is a Julia package that provides Rust toolchains (especially `
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/AtelierArith/RustToolChains.jl.git")
+Pkg.add(url="https://github.com/AtelierArith/RustToolChain.jl.git")
 ```
 
 ## Usage
@@ -29,7 +29,7 @@ Pkg.add(url="https://github.com/AtelierArith/RustToolChains.jl.git")
 ### Basic Example
 
 ```julia
-using RustToolChains: cargo
+using RustToolChain: cargo
 
 # Execute cargo command
 run(`$(cargo()) --version`)
@@ -46,8 +46,8 @@ run(`$(cargo()) run`)
 This repository includes a simple example:
 
 ```sh
-git clone https://github.com/AtelierArith/RustToolChains.jl.git
-cd RustToolChains.jl
+git clone https://github.com/AtelierArith/RustToolChain.jl.git
+cd RustToolChain.jl
 julia --project -e 'using Pkg; Pkg.instantiate()'
 cd examples
 julia --project run.jl
@@ -72,7 +72,7 @@ Returns a command object for executing Rust's `cargo` command.
 
 **Examples**:
 ```julia
-using RustToolChains: cargo
+using RustToolChain: cargo
 
 # Check cargo version
 run(`$(cargo()) --version`)
@@ -93,9 +93,9 @@ This package uses Julia's Artifacts system to automatically download and manage 
 ### Project Structure
 
 ```
-RustToolChains.jl/
+RustToolChain.jl/
 ├── src/
-│   └── RustToolChains.jl           # Main Julia module
+│   └── RustToolChain.jl           # Main Julia module
 ├── examples/
 │   ├── hello/                      # Example Rust project
 │   └── run.jl                      # Julia script demonstrating usage

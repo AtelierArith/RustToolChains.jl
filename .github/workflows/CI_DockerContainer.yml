@@ -1,0 +1,33 @@
+name: CI Docker Container
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  pull_request:
+
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.10'
+          - '1'
+        os:
+          - ubuntu-latest
+        arch:
+          - x64
+    steps:
+      - uses: actions/checkout@v6
+      - name: Test in Julia docker
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/app -w /app julia:${{ matrix.version }} bash -lc '
+            apt-get update &&
+            apt-get install -y --no-install-recommends build-essential ca-certificates &&
+            /usr/local/julia/bin/julia --project -e "using Pkg; Pkg.test(); Pkg.test(); Pkg.test()"
+          '

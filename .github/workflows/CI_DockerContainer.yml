@@ -29,5 +29,5 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/app -w /app julia:${{ matrix.version }} bash -lc '
             apt-get update &&
             apt-get install -y --no-install-recommends build-essential ca-certificates &&
-            julia --project=. -e "using Pkg; Pkg.test(); Pkg.test(\"RustToolChain\")"
+            /usr/local/julia/bin/julia --project -e "using Pkg; Pkg.test(); Pkg.test(); Pkg.test()"
           '

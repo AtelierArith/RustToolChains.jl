@@ -8,35 +8,55 @@ export cargo, rustc
 using Pkg.Artifacts: ensure_artifact_installed, artifact_path, artifact_hash
 
 """
-    cargo_exe_path_from_artifacts()
+    ensure_rust_toolchain_installed()
 
-Get the cargo executable path from Julia's Artifacts system.
-Downloads and installs the Rust toolchain if not already present.
+Ensures that the Rust toolchain artifact is installed and available.
+If not already installed, downloads and installs the Rust toolchain artifact.
+Returns the installation prefix directory containing the Rust binaries.
 """
-function cargo_exe_path_from_artifacts()
+function ensure_rust_toolchain_installed()
     ensure_artifact_installed("RustToolChain", ARTIFACTS_TOML)
     toolchain_dir = artifact_path(artifact_hash("RustToolChain", ARTIFACTS_TOML))
     # The Rust toolchain is unpacked inside a rust-*-*/ directory
     rust_dirs = filter(x -> startswith(x, "rust-"), readdir(toolchain_dir))
     isempty(rust_dirs) && error("Could not find rust-* directory in artifact")
     rust_dir = first(rust_dirs)
-    return joinpath(toolchain_dir, rust_dir, "cargo", "bin", "cargo" * EXE_EXT)
+    prefix = joinpath(toolchain_dir, rust_dir, "prefix")
+
+    if isdir(prefix)
+        return prefix
+    else
+        run(`bash $(joinpath(toolchain_dir, rust_dir, "install.sh")) --prefix=$(prefix) --disable-ldconfig`)
+        return prefix
+    end
 end
 
 """
-    rustc_exe_path_from_artifacts()
+    cargo_cmd_from_artifacts()
 
-Get the rustc executable path from Julia's Artifacts system.
+Get the cargo executable command from Julia's Artifacts system.
 Downloads and installs the Rust toolchain if not already present.
 """
-function rustc_exe_path_from_artifacts()
-    ensure_artifact_installed("RustToolChain", ARTIFACTS_TOML)
-    toolchain_dir = artifact_path(artifact_hash("RustToolChain", ARTIFACTS_TOML))
-    # The Rust toolchain is unpacked inside a rust-*-*/ directory
-    rust_dirs = filter(x -> startswith(x, "rust-"), readdir(toolchain_dir))
-    isempty(rust_dirs) && error("Could not find rust-* directory in artifact")
-    rust_dir = first(rust_dirs)
-    return joinpath(toolchain_dir, rust_dir, "rustc", "bin", "rustc" * EXE_EXT)
+function cargo_cmd_from_artifacts()
+    prefix = ensure_rust_toolchain_installed()
+    cargo_path = joinpath(prefix, "bin", "cargo" * EXE_EXT)
+    @assert isfile(cargo_path) "Cargo executable not found at $cargo_path"
+
+    env = copy(ENV)
+    env["RUSTC"] = joinpath(prefix, "bin", "rustc" * EXE_EXT)
+    return setenv(`$cargo_path`, env)
+end
+
+"""
+    rustc_exe_cmd_from_artifacts()
+
+Get the rustc executable command from Julia's Artifacts system.
+Downloads and installs the Rust toolchain if not already present.
+"""
+function rustc_cmd_from_artifacts()
+    prefix =ensure_rust_toolchain_installed()
+    rustc_path = joinpath(prefix, "bin", "rustc" * EXE_EXT)
+    return `$rustc_path --sysroot $(prefix)`
 end
 
 """
@@ -68,8 +88,7 @@ function cargo()
     end
 
     # Fall back to Artifacts cargo (case B)
-    cargo_exe = cargo_exe_path_from_artifacts()
-    return `$cargo_exe`
+    return cargo_cmd_from_artifacts()
 end
 
 """
@@ -101,8 +120,7 @@ function rustc()
     end
 
     # Fall back to Artifacts rustc (case B)
-    rustc_exe = rustc_exe_path_from_artifacts()
-    return `$rustc_exe`
+    return rustc_cmd_from_artifacts()
 end
 
 end # module RustToolChain
